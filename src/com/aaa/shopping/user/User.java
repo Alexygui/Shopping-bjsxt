@@ -2,9 +2,14 @@ package com.aaa.shopping.user;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import com.aaa.shopping.util.DB;
 
@@ -76,6 +81,45 @@ public class User {
 		} finally {
 			DB.close(preparedStatement);
 			DB.close(connection);
+		}
+	}
+	
+	/**
+	 * 从数据库中取出所有的User
+	 */
+	public static List<User> getUsers() {
+		List<User> userList = new ArrayList<User>();
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		String sql = "select * from user";
+		ResultSet resultSet = DB.getResultSet(statement, sql);
+		try {
+			while(resultSet.next()) {
+				User user = new User();
+				userList.add(user);
+				user.setId(resultSet.getInt("id"));
+				user.setUsername(resultSet.getString("username"));
+				user.setPassword(resultSet.getString("password"));
+				user.setPhone(resultSet.getString("phone"));
+				user.setAddr(resultSet.getString("addr"));
+				user.setRdate(resultSet.getTimestamp("rdate"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(resultSet);
+			DB.close(statement);
+			DB.close(connection);
+		}
+		
+		return userList;
+	}
+	
+	
+	public static void main(String[] args) {
+		List<User> users=User.getUsers();
+		for(Iterator<User> it = users.iterator(); it.hasNext();) {
+			System.out.println(it.next());
 		}
 	}
 }
