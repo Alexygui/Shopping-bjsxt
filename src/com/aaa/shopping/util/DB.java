@@ -118,7 +118,7 @@ public class DB {
 			if (preparedStatement != null) {
 				preparedStatement.close();
 				preparedStatement = null;
-			}
+		}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -139,6 +139,8 @@ public class DB {
 	}
 
 	public static void main(String[] args) {
-		new DB().getConnection();
+		Connection connection = new DB().getConnection();
+		System.out.println("connected");
+		DB.close(connection);
 	}
 }
