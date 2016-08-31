@@ -1,0 +1,12 @@
+/* jquery_select */
+.search .select_js { width: 85px; height: 28px; position: relative; z-index: 10; float: left; }
+.search .select_js p { float: left; padding-left:6px; display: inline; line-height:28px;}
+.search .select_js .ico { width: 9px; height: 7px; margin-top: 12px; float:left ;margin-left:10px;_display:inline; background: url(../image/f_sanjiao.png) no-repeat 0 0; cursor: pointer;}
+.search .select_js ul { width: 81px; position: absolute; top: 27px; left: 0px; border: 1px solid #f7dbc6; display: none; background: #fff; z-index: 1000; }
+.search .select_js ul li { line-height: 22px; padding-left: 5px; cursor: pointer; }
+.search .search_nonce { background: #f7dbc6; }
+.search .btn { border: 0; width: 75px; height: 29px; background: url(../images/btn.gif) no-repeat; }
+.search .wrap p { float: left; margin-left: 5px; margin-top: 2px; }
+.search .wrap p a { color: #999; text-decoration: none; }
+.search .wrap p a:hover { color: #f60; text-decoration: underline; }
+/* end jquery_select */
