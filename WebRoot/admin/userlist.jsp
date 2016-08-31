@@ -2,7 +2,8 @@
 <%@ page import="com.aaa.shopping.user.*"%>
 
 <%
-	List<User> users = User.getUsers();
+	//获取User列表
+	List<User> users = UserManager.getUsers();
 %>
 
 <%
@@ -37,7 +38,7 @@
 			<td>Phone</td>
 			<td>Addr</td>
 			<td>Rdate</td>
-			<td></td>
+			<td>处理</td>
 		</tr>
 		<%
 			for (Iterator<User> it = users.iterator(); it.hasNext();) {
@@ -49,7 +50,7 @@
 			<td><%=user.getPhone()%></td>
 			<td><%=user.getAddr()%></td>
 			<td><%=user.getRdate()%></td>
-			<td></td>
+			<td><a href="admin/userdelete.jsp?id=<%=user.getId()%>">删除</a></td>
 		</tr>
 		<%
 			}
