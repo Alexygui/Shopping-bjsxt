@@ -131,6 +131,30 @@ public class User {
 		}
 		return user;
 	}
+	
+	/**
+	 * 修改更新的用户信息
+	 */
+	public void update() {
+		Connection connection = DB.getConnection();
+		//Statement statement = DB.getStatement(connection);
+		//DB.close(statement);
+		String sql = "update user set username=?, phone=?, addr=? where id=?";
+		PreparedStatement preparedStatement = DB.prepare(connection, sql);
+		try {
+			preparedStatement.setString(1, username);
+			preparedStatement.setString(2, phone);
+			preparedStatement.setString(3, addr);
+			preparedStatement.setInt(4, id);
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(preparedStatement);
+			DB.close(connection);
+			
+		}
+	}
 }
 
 

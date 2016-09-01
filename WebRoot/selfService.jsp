@@ -1,4 +1,12 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@page import="com.aaa.shopping.user.*" %>
+<%
+User user = (User)session.getAttribute("user");
+if(user == null) {
+	out.println("您尚未登录，请先登录");
+	return;
+}
+%>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
