@@ -57,6 +57,7 @@ List<Category> categories = new CategoryDao().getCategories();
 			<td><%=c.getCno() %></td>
 			<td><%=c.getGrade() %></td>
 			<td>
+			<a href="admin/categoryModify.jsp?id=<%=c.getId()%>">修改</a>
 				<%if(c.getGrade() < c.MAX_GRADE) { %> 
 				<a href="admin/categoryAddChild.jsp?pid=<%=c.getId()%>&grade=<%=c.getGrade()%>">添加子类别</a>
 				<%} %>

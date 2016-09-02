@@ -42,6 +42,17 @@ public class DB {
 		}
 		return connection;
 	}
+	
+	/**
+	 * 执行更新操作
+	 */
+	public static void executeUpdate(Statement statement, String sql) {
+		try {
+			statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 获得Statement

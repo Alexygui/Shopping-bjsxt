@@ -8,6 +8,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.taglibs.standard.extra.spath.Step;
+import org.apache.tomcat.dbcp.dbcp.DbcpException;
+
 import com.aaa.shopping.util.DB;
 
 public class CategoryDao {
@@ -143,5 +146,39 @@ public class CategoryDao {
 			e.printStackTrace();
 		}
 		return category;
+	}
+	
+	/**
+	 * 查询对应的id号的category
+	 */
+	public Category getCategoryById(int id) {
+		Category category = null;
+		Connection connection = DB.getConnection();
+		String sql = "select * from category where id=" + id;
+		Statement statement = DB.getStatement(connection);
+		ResultSet resultSet = DB.getResultSet(statement, sql);
+		try {
+			resultSet.next();
+			category = this.getCategoryFromResultset(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(statement);
+			DB.close(connection);
+		}		
+		
+		return category;
+	}
+	
+	/**
+	 * 更新对应的category的数据
+	 */
+	public void updateCategory(Category category) {
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		String sql = "update category set name='" + category.getName() + "', descr='" + category.getDescr() + "' where id=" + category.getId();
+		DB.executeUpdate(statement, sql);
+		DB.close(statement);
+		DB.close(connection);
 	}
 }
