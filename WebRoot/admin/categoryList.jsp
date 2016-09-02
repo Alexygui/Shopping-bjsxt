@@ -61,6 +61,7 @@ List<Category> categories = new CategoryDao().getCategories();
 				<%if(c.getGrade() < c.MAX_GRADE) { %> 
 				<a href="admin/categoryAddChild.jsp?pid=<%=c.getId()%>&grade=<%=c.getGrade()%>">添加子类别</a>
 				<%} %>
+				<a href="admin/categoryDelete.jsp?id=<%=c.getId() %>">删除</a>
 			</td>
 		</tr>
 		<% }%>

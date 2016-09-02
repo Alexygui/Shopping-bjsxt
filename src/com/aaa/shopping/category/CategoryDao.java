@@ -64,9 +64,9 @@ public class CategoryDao {
 			int numberToAdd = (int) Math.pow(baseNumber, category.MAX_GRADE - category.getGrade());
 
 			// 计算cno编码
-			if (cnoMax == 0) { //当前类别没有数据的时候cnoMax返回值为0
-				if(category.getPid() == 0) {
-					cno = numberToAdd; //第一级的类别直接用类别起始数字numberToAdd
+			if (cnoMax == 0) { // 当前类别没有数据的时候cnoMax返回值为0
+				if (category.getPid() == 0) {
+					cno = numberToAdd; // 第一级的类别直接用类别起始数字numberToAdd
 				} else {
 					int parentCno = getParentCno(connection, category);
 					// 非第一类别的则用他的父类别的cno加上本级别的起始数字numberToAdd
@@ -84,9 +84,9 @@ public class CategoryDao {
 		}
 		return cno;
 	}
-	
+
 	/**
-	 *  获取当前category的父类型
+	 * 获取当前category的父类型
 	 */
 	private int getParentCno(Connection connection, Category category) {
 		int cno = -1;
@@ -106,7 +106,7 @@ public class CategoryDao {
 	}
 
 	/**
-	 * 取出所有的category，以cno升序排列 
+	 * 取出所有的category，以cno升序排列
 	 */
 	public List<Category> getCategories() {
 		List<Category> categories = new ArrayList<Category>();
@@ -126,12 +126,12 @@ public class CategoryDao {
 			DB.close(statement);
 			DB.close(connection);
 		}
-		
+
 		return categories;
 	}
 
 	/**
-	 * 获得查询所得category的字段的值 
+	 * 获得查询所得category的字段的值
 	 */
 	private Category getCategoryFromResultset(ResultSet resultSet) {
 		Category category = new Category();
@@ -147,7 +147,7 @@ public class CategoryDao {
 		}
 		return category;
 	}
-	
+
 	/**
 	 * 查询对应的id号的category
 	 */
@@ -165,18 +165,31 @@ public class CategoryDao {
 		} finally {
 			DB.close(statement);
 			DB.close(connection);
-		}		
-		
+		}
+
 		return category;
 	}
-	
+
 	/**
 	 * 更新对应的category的数据
 	 */
 	public void updateCategory(Category category) {
 		Connection connection = DB.getConnection();
 		Statement statement = DB.getStatement(connection);
-		String sql = "update category set name='" + category.getName() + "', descr='" + category.getDescr() + "' where id=" + category.getId();
+		String sql = "update category set name='" + category.getName() + "', descr='" + category.getDescr()
+				+ "' where id=" + category.getId();
+		DB.executeUpdate(statement, sql);
+		DB.close(statement);
+		DB.close(connection);
+	}
+
+	/**
+	 * 删除category
+	 */
+	public void deleteCategoryById(int id) {
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		String sql = "delete from category where id=" + id;
 		DB.executeUpdate(statement, sql);
 		DB.close(statement);
 		DB.close(connection);
