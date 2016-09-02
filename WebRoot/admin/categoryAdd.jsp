@@ -1,16 +1,24 @@
+<%@page import="com.aaa.shopping.category.CategoryDao"%>
+<%@page import="com.aaa.shopping.category.Category"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ include file="_SessionCheck.jsp"%>
 
 <%
+	request.setCharacterEncoding("utf-8");
 	String action = request.getParameter("action");
-	if (action != null && action.equals("login")) {
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		if (!username.equals("admin") || !password.equals("admin")) {
-			out.println("用户名或者密码不正确");
-			return;
-		}
-		session.setAttribute("admin", "admin");
-		response.sendRedirect("adminIndex.jsp");
+	if (action != null && action.equals("categoryAdd")) {
+		String name = request.getParameter("name");
+		String descr = request.getParameter("descr");
+
+		Category category = new Category();
+		category.setPid(0);
+		category.setName(name);
+		category.setDescr(descr);
+		category.setGrade(1);
+		CategoryDao categoryDao = new CategoryDao();
+		categoryDao.add(category);
+		out.println("类别添加成功");
+		return;
 	}
 %>
 
@@ -25,7 +33,7 @@
 <head>
 <base href="<%=basePath%>">
 
-<title>My JSP 'login.jsp' starting page</title>
+<title>My JSP 'categoryAdd.jsp' starting page</title>
 
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
@@ -39,21 +47,21 @@
 </head>
 
 <body>
-	<form name="form" action="admin/login.jsp" method="post">
-		<input type="hidden" name="action" value="login" />
+	<form name="form" action="admin/categoryAdd.jsp" method="post">
+		<input type="hidden" name="action" value="categoryAdd" />
 		<table width="750" align="center" border="2">
 			<tr>
-				<td colspan="2" align="center">管理员登录</td>
+				<td colspan="2" align="center">添加类别</td>
 			</tr>
 			<tr>
-				<td>用户名：</td>
-				<td><input type=text name="username" size="30" maxlength="10">
+				<td>类别名称：</td>
+				<td><input type=text name="name" size="30" maxlength="10">
 				</td>
 			</tr>
+
 			<tr>
-				<td>密码：</td>
-				<td><input type=password name="password" size="15"
-					maxlength="12"></td>
+				<td>类别描述：</td>
+				<td><textarea rows="12" cols="80" name="descr"></textarea></td>
 			</tr>
 
 			<tr>
