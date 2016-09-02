@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.aaa.shopping.util.DB;
 
@@ -29,7 +31,10 @@ public class CategoryDao {
 			preparedStatement.setString(2, category.getName());
 			preparedStatement.setString(3, category.getDescr());
 			preparedStatement.setInt(4, cno);
+
 			preparedStatement.setInt(5, category.getGrade());
+			// 提交之前要执行这句，不然也无法将数据查到数据库中
+			preparedStatement.executeUpdate();
 			connection.commit();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,5 +100,40 @@ public class CategoryDao {
 		return cno;
 	}
 
-	
+	public List<Category> getCategories() {
+		List<Category> categories = new ArrayList<Category>();
+		Connection connection = DB.getConnection();
+		String sql = "select * from category order by cno";
+		Statement statement = DB.getStatement(connection);
+		ResultSet resultSet = DB.getResultSet(statement, sql);
+		try {
+			while (resultSet.next()) {
+				Category category = this.getCategoryFromResultset(resultSet);
+				categories.add(category);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(resultSet);
+			DB.close(statement);
+			DB.close(connection);
+		}
+		
+		return categories;
+	}
+
+	private Category getCategoryFromResultset(ResultSet resultSet) {
+		Category category = new Category();
+		try {
+			category.setId(resultSet.getInt("id"));
+			category.setPid(resultSet.getInt("pid"));
+			category.setName(resultSet.getString("name"));
+			category.setDescr(resultSet.getString("descr"));
+			category.setCno(resultSet.getInt("cno"));
+			category.setGrade(resultSet.getInt("grade"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return category;
+	}
 }
