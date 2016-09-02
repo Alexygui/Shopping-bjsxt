@@ -82,7 +82,9 @@ public class CategoryDao {
 		return cno;
 	}
 	
-	// 获取当前category的父类型
+	/**
+	 *  获取当前category的父类型
+	 */
 	private int getParentCno(Connection connection, Category category) {
 		int cno = -1;
 		Statement statement = DB.getStatement(connection);
@@ -100,6 +102,9 @@ public class CategoryDao {
 		return cno;
 	}
 
+	/**
+	 * 取出所有的category，以cno升序排列 
+	 */
 	public List<Category> getCategories() {
 		List<Category> categories = new ArrayList<Category>();
 		Connection connection = DB.getConnection();
@@ -122,6 +127,9 @@ public class CategoryDao {
 		return categories;
 	}
 
+	/**
+	 * 获得查询所得category的字段的值 
+	 */
 	private Category getCategoryFromResultset(ResultSet resultSet) {
 		Category category = new Category();
 		try {

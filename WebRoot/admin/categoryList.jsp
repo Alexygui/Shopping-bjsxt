@@ -51,14 +51,14 @@ List<Category> categories = new CategoryDao().getCategories();
 
 		<tr>
 			<td><%=c.getId() %></td>
-			<td><%=c.getName() %></td>
+			<td><%=preString + c.getName() %></td>
 			<td><%=c.getDescr() %></td>
 			<td><%=c.getPid() %></td>
 			<td><%=c.getCno() %></td>
 			<td><%=c.getGrade() %></td>
 			<td>
 				<%if(c.getGrade() < c.MAX_GRADE) { %> 
-				<a href="categoryAddChild.jsp?pid=<%=c.getPid()%>&grade=<%=c.getGrade()%>">添加子类别</a>
+				<a href="admin/categoryAddChild.jsp?pid=<%=c.getId()%>&grade=<%=c.getGrade()%>">添加子类别</a>
 				<%} %>
 			</td>
 		</tr>
