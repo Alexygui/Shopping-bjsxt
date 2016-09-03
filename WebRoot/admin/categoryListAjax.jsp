@@ -1,28 +1,69 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=GB18030"
+    pageEncoding="GB18030"%>
+<%@ page import="com.aaa.shopping.category.*, java.util.*"%>
+
 <%
-String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+List<Category> categories = new CategoryDao().getCategories();
 %>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
-  <head>
-    <base href="<%=basePath%>">
-    
-    <title>My JSP 'categoryListAjax.jsp' starting page</title>
-    
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="cache-control" content="no-cache">
-	<meta http-equiv="expires" content="0">    
-	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
-	<meta http-equiv="description" content="This is my page">
-	<!--
-	<link rel="stylesheet" type="text/css" href="styles.css">
-	-->
+<head>
+<script language="javascript" src="script/TV20.js"></script>
+<script language="javascript">
+	var req;
+	var gKey;
+	function init() {
+		if(window.XMLHttpRequest) {
+			req = new XMLHttpRequest();
+		} else if (window.ActiveXObject) {
+			req = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	}
+	
+	function myLabelDblClick(key, parentKey) {
+		if(findNode(key).subitems.length > 0) return;
+		init();
+		gKey = key;
+		var url = "GetCategoryChilds2.jsp?id=" + escape(key);
+		req.open("GET", url, true);
+		req.onreadystatechange = callback;
+		req.send(null);
+	}
+	
+	function callback() {
+		if(4 == req.readyState) {
+			if(200 == req.status) {
+				eval(req.responseText);
+				var node = findNode(gKey);
+				if(node.subitems.length > 0) {
+					node.refresh();
+					node.open();
+				}
+			}
+		}
+		
+	}
+	
+	
+</script>
+</head>
 
-  </head>
-  
-  <body>
-    This is my JSP page. <br>
-  </body>
+<body>
+<script language="javascript">
+<!--
+	addListener("dblclick", "myLabelDblClick");
+	addNode(-1,0,"Àà±ð","images/top.gif");
+	<%
+	for(int i=0; i<categories.size(); i++) {
+		Category c = categories.get(i);
+		%>
+		addNode(<%=c.getPid()%>,<%=c.getId()%>,"<%=c.getName()%>","images/top.gif");
+		<%
+	}
+	%>
+	showTV();
+	
+-->
+</script>
+</body>
 </html>
