@@ -1,9 +1,9 @@
 package com.aaa.shopping.product;
 
+import java.util.List;
+
 public interface ProductDao {
-	/**
-	 * 添加产品
-	 */
-	public void addProduct(Product product);
 	
+	public void addProduct(Product product);
+	public List<Product> getProducts();
 }

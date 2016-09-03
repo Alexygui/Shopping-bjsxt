@@ -2,8 +2,12 @@ package com.aaa.shopping.product;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.aaa.shopping.util.DB;
 
@@ -12,6 +16,7 @@ public class ProductMysqlDao implements ProductDao{
 	/**
 	 * 添加产品
 	 */
+	@Override
 	public void addProduct(Product product) {
 		Connection connection = DB.getConnection();
 		String sql = "insert into product values (null, ?, ?, ?, ?, ?, ?)";
@@ -31,4 +36,52 @@ public class ProductMysqlDao implements ProductDao{
 			DB.close(connection);
 		}
 	}
+
+	/**
+	 * 获得所有的产品的
+	 */
+	@Override
+	public List<Product> getProducts() {
+		List<Product> products = new ArrayList<Product>();
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		String sql = "select * from product order by pdate desc";
+		ResultSet resultSet = DB.getResultSet(statement, sql);
+		try {
+			while(resultSet.next()) {
+				Product product = this.getProductsFromResultset(resultSet);
+				products.add(product);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			DB.close(resultSet);
+			DB.close(statement);
+			DB.close(connection);
+		}		
+		
+		return products;
+	}
+
+	/**
+	 * 从Resultset中取出一个Product的对象 
+	 * @param resultSet 
+	 */
+	private Product getProductsFromResultset(ResultSet resultSet) {
+		Product product = new Product();
+		try {
+			product.setId(resultSet.getInt("id"));
+			product.setName(resultSet.getString("name"));
+			product.setDescr(resultSet.getString("descr"));
+			product.setNormalprice(resultSet.getDouble("normalprice"));
+			product.setMemberprice(resultSet.getDouble("memberprice"));
+			product.setPdate(resultSet.getDate("pdate"));
+			product.setCategoryid(resultSet.getInt("categoryid"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return product;
+	}
+	
+	
 }
