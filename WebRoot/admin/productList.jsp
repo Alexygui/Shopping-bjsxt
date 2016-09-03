@@ -1,12 +1,31 @@
+<%@page import="com.aaa.shopping.product.ProductManager"%>
 <%@page import="com.aaa.shopping.product.ProductMysqlDao"%>
 <%@page import="com.aaa.shopping.product.ProductDao"%>
 <%@page import="com.aaa.shopping.product.Product"%>
+<%@page import="com.aaa.shopping.util.*"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="_SessionCheck.jsp" %>
+<%@ include file="_SessionCheck.jsp"%>
 
 <%
-ProductDao productDao = new ProductMysqlDao();
-List<Product> products = productDao.getProducts(); 
+	String strCurrentPage = request.getParameter("currentPage");
+	int currentPage = 1;
+	if (strCurrentPage != null && !strCurrentPage.trim().equals("")) {
+		try {
+			currentPage = Integer.parseInt(strCurrentPage);
+		} catch (NumberFormatException e) {
+			currentPage = 1;
+		}
+		if (currentPage <= 0) {
+			currentPage = 1;
+		}
+	}
+%>
+
+<%
+	//取出所有的Procut的数据
+	ProductManager productManager = new ProductManager();
+	List<Product> products = productManager.getProducts();
+	Page page2 = productManager.getPage(currentPage);
 %>
 
 <%
@@ -35,7 +54,7 @@ List<Product> products = productDao.getProducts();
 
 <body>
 	<table border="1" align="center">
-	<tr>
+		<tr>
 			<td>选择</td>
 			<td>产品ID</td>
 			<td>产品名称</td>
@@ -47,13 +66,17 @@ List<Product> products = productDao.getProducts();
 			<td>处理</td>
 		</tr>
 		<%
-		/* 循环开始 */
-			for(Iterator<Product> it = products.iterator(); it.hasNext();) {
-				Product p = it.next();
+			/* 循环开始 */
+			int start = (page2.getCurrentPage() - 1) * page2.getPageSize();
+			for (int i = start; i < start + page2.getPageSize(); i++) {
+				//防止数组溢出错误
+				if (i >= page2.getTotalSize())
+					break;
+				Product p = products.get(i);
 		%>
 
 		<tr>
-			<td><input type="checkbox" name="id" value="<%=p.getId()%>"/></td>
+			<td><input type="checkbox" name="id" value="<%=p.getId()%>" /></td>
 			<td><%=p.getId()%></td>
 			<td><%=p.getName()%></td>
 			<td><%=p.getDescr()%></td>
@@ -61,16 +84,52 @@ List<Product> products = productDao.getProducts();
 			<td><%=p.getMemberprice()%></td>
 			<td><%=p.getPdate()%></td>
 			<td><%=p.getCategoryid()%></td>
-			<td>
-			<a href="admin/productModify.jsp?id=<%=p.getId()%>">修改</a>
-
-				<a href="admin/productDelete.jsp?id=<%=p.getId()%>">删除</a>
-			</td>
+			<td><a href="admin/productModify.jsp?id=<%=p.getId()%>">修改</a> <a
+				href="admin/productDelete.jsp?id=<%=p.getId()%>">删除</a></td>
 		</tr>
 		<%
 			}
-		/* 循环结束 */
+			/* 循环结束 */
 		%>
+
+		<tr>
+			<td>第<%=currentPage%>页/共<%=page2.getTotalPages()%>页
+			</td>
+			<td>
+				<%
+					if (page2.isHasFirst()) {
+				%> <a
+				href="admin/productList.jsp?currentPage=1">首页</a> <%
+ 	}
+ %>
+			</td>
+			<td>
+				<%
+					if (page2.isHasPrevious()) {
+				%> <a
+				href="admin/productList.jsp?currentPage=<%=currentPage - 1%>">前一页</a>
+				<%
+					}
+				%>
+			</td>
+			<td>
+				<%
+					if (page2.isHasNext()) {
+				%> <a
+				href="admin/productList.jsp?currentPage=<%=currentPage + 1%>">后一页</a>
+				<%
+					}
+				%>
+			</td>
+			<td>
+				<%
+					if (page2.isHasLast()) {
+				%> <a href="admin/productList.jsp?currentPage=<%=page2.getTotalPages()%>">尾页</a>
+				<%
+					}
+				%>
+			</td>
+		</tr>
 	</table>
-  </body>
+</body>
 </html>

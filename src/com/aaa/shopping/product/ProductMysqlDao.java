@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.aaa.shopping.util.DB;
+import com.aaa.shopping.util.Page;
 
-public class ProductMysqlDao implements ProductDao{
-	
+public class ProductMysqlDao implements ProductDao {
+
 	/**
 	 * 添加产品
 	 */
@@ -48,24 +49,25 @@ public class ProductMysqlDao implements ProductDao{
 		String sql = "select * from product order by pdate desc";
 		ResultSet resultSet = DB.getResultSet(statement, sql);
 		try {
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				Product product = this.getProductsFromResultset(resultSet);
 				products.add(product);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			DB.close(resultSet);
 			DB.close(statement);
 			DB.close(connection);
-		}		
-		
+		}
+
 		return products;
 	}
 
 	/**
-	 * 从Resultset中取出一个Product的对象 
-	 * @param resultSet 
+	 * 从Resultset中取出一个Product的对象
+	 * 
+	 * @param resultSet
 	 */
 	private Product getProductsFromResultset(ResultSet resultSet) {
 		Product product = new Product();
@@ -82,6 +84,28 @@ public class ProductMysqlDao implements ProductDao{
 		}
 		return product;
 	}
-	
-	
+
+	/**
+	 * 获取page对象
+	 */
+	@Override
+	public Page getPage(int currentPage) {
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		ResultSet resultSet = DB.getResultSet(statement, "select count(*) from product");
+		try {
+			resultSet.next();
+			page.setTotalSize(resultSet.getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+
+			DB.close(resultSet);
+			DB.close(statement);
+			DB.close(connection);
+		}
+		return page;
+	}
 }
