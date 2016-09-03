@@ -15,7 +15,7 @@
 		} catch (NumberFormatException e) {
 			currentPage = 1;
 		}
-		if (currentPage <= 0) {
+		if (currentPage < 1) {
 			currentPage = 1;
 		}
 	}

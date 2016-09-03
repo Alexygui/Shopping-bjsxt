@@ -36,7 +36,7 @@ public class DB {
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/shopping?useUnicode=true&characterEncoding=UTF-8&user=root&password=123456");
+					"jdbc:mysql://localhost:3306/shopping?useUnicode=true&characterEncoding=UTF-8&useSSL=false&user=root&password=123456");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
