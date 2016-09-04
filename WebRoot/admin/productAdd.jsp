@@ -65,7 +65,7 @@
 <body>
 <!-- 验证表单中是否选择分类正确，并且返回categoryid的值 -->
 	<script type="text/javascript">
-	function check() {
+	 function check() {
 		var selectedCategory = document.form.categoryid.options[document.form.categoryid.selectedIndex];
 		var selectedValue = selectedCategory.value;
 		if(selectedValue.split("|")[1] == "1") {
@@ -75,17 +75,17 @@
 		} else {
 			selectedCategory.value = selectedValue.split("|")[0];
 		}
-	}
+	} 
   </script>
 
 	<form name="form" action="admin/productAdd.jsp" method="post" onsubmit="return check()">
 		<input type="hidden" name="action" value="productAdd" />
 		<table width="750" align="center" border="2">
 			<tr>
-				<td colspan="2" align="center">添加类别</td>
+				<td colspan="2" align="center">添加产品</td>
 			</tr>
 			<tr>
-				<td>类别名称：</td>
+				<td>产品名称：</td>
 				<td><input type=text name="name" size="30" maxlength="10">
 				</td>
 			</tr>

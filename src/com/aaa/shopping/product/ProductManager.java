@@ -20,4 +20,18 @@ public class ProductManager {
 	public Page getPage(int currentPage) {
 		return productDao.getPage(currentPage);
 	}
+	
+	/**
+	 * 获得对应id号的product的数据
+	 */
+	public Product getProductById(int id) {
+		return productDao.getProductById(id);
+	}
+	
+/**
+	 * 更新product的数据
+	 */
+	public void updateProduct(Product product) {
+		productDao.updateProduct(product);
+	}
 }

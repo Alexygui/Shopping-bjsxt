@@ -50,7 +50,7 @@ public class ProductMysqlDao implements ProductDao {
 		ResultSet resultSet = DB.getResultSet(statement, sql);
 		try {
 			while (resultSet.next()) {
-				Product product = this.getProductsFromResultset(resultSet);
+				Product product = this.getProductFromResultset(resultSet);
 				products.add(product);
 			}
 		} catch (SQLException e) {
@@ -69,7 +69,7 @@ public class ProductMysqlDao implements ProductDao {
 	 * 
 	 * @param resultSet
 	 */
-	private Product getProductsFromResultset(ResultSet resultSet) {
+	private Product getProductFromResultset(ResultSet resultSet) {
 		Product product = new Product();
 		try {
 			product.setId(resultSet.getInt("id"));
@@ -108,4 +108,69 @@ public class ProductMysqlDao implements ProductDao {
 		}
 		return page;
 	}
+
+	/**
+	 * 获得对应id号的product的数据
+	 */
+	@Override
+	public Product getProductById(int id) {
+		Product product = null;
+		Connection connection = DB.getConnection();
+		Statement statement = DB.getStatement(connection);
+		ResultSet resultSet = DB.getResultSet(statement, "select * from product where id=" + id);
+		try {
+			resultSet.next();
+			product = getProductFromResultset(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(resultSet);
+			DB.close(statement);
+			DB.close(connection);
+		}
+		return product;
+	}
+
+	/**
+	 * 更新product的数据
+	 */
+	@Override
+	public void updateProduct(Product product) {
+		Connection connection = DB.getConnection();
+		String sql = "update product set name=?, descr=?, normalprice=?, memberprice=?, pdate=?, categoryid=? where id=" + product.getId();
+		PreparedStatement preparedStatement = DB.prepare(connection, sql);
+		try {
+			preparedStatement.setString(1, product.getName());
+			preparedStatement.setString(2, product.getDescr());
+			preparedStatement.setDouble(3, product.getNormalprice());
+			preparedStatement.setDouble(4, product.getMemberprice());
+			preparedStatement.setTimestamp(5, new Timestamp(product.getPdate().getTime()));
+			preparedStatement.setInt(6, product.getCategoryid());
+			preparedStatement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			DB.close(preparedStatement);
+			DB.close(connection);
+		}
+		
+	}
+	
+	
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
