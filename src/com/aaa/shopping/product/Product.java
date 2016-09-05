@@ -2,6 +2,8 @@ package com.aaa.shopping.product;
 
 import java.util.Date;
 
+import com.aaa.shopping.category.Category;
+
 public class Product {
 	private int id;
 	private String name;
@@ -10,7 +12,15 @@ public class Product {
 	private double memberprice;
 	private Date pdate;
 	private int categoryid;
+	//保存category的对象
+	private Category category;
 	
+	public Category getCategory() {
+		return category;
+	}
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 	public int getId() {
 		return id;
 	}

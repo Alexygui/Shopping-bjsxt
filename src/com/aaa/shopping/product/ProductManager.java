@@ -17,8 +17,8 @@ public class ProductManager {
 	/**
 	 * 获取page对象
 	 */
-	public Page getPage(int currentPage) {
-		return productDao.getPage(currentPage);
+	public Page getPageOfProduct(int currentPage) {
+		return productDao.getPageOfProduct(currentPage);
 	}
 	
 	/**
@@ -33,5 +33,13 @@ public class ProductManager {
 	 */
 	public void updateProduct(Product product) {
 		productDao.updateProduct(product);
+	}
+	
+	/**
+	 * 简单搜索
+	 */
+	public List<Product> simpleSearch(List<Product> products, Page page, String keyword) {
+		String keywordWithLike = "where p.name like '%"+ keyword +"%' or p.descr like '%"+ keyword + "%'";
+		return productDao.simpleSearch(products, page, keywordWithLike);
 	}
 }

@@ -1,12 +1,10 @@
-<%@page import="com.aaa.shopping.product.ProductManager"%>
-<%@page import="com.aaa.shopping.product.ProductMysqlDao"%>
-<%@page import="com.aaa.shopping.product.ProductDao"%>
-<%@page import="com.aaa.shopping.product.Product"%>
-<%@page import="com.aaa.shopping.util.*"%>
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ include file="_SessionCheck.jsp"%>
+<%@page import="com.aaa.shopping.product.*"%>
+<%@page import="com.aaa.shopping.util.*"%>
 
 <%
+	request.setCharacterEncoding("utf-8");
+	//获取或设置当前页面的值
 	String strCurrentPage = request.getParameter("currentPage");
 	int currentPage = 1;
 	if (strCurrentPage != null && !strCurrentPage.trim().equals("")) {
@@ -22,10 +20,13 @@
 %>
 
 <%
-	//取出所有的Procut的数据
+	String keyword = new String( request.getParameter("keyword").getBytes("8859_1"), "utf-8");
+// System.out.println("keyword=" + keyword);		
+ //取出所有的Procut的数据
 	ProductManager productManager = new ProductManager();
-	List<Product> products = productManager.getProducts();
-	Page page2 = productManager.getPageOfProduct(currentPage);
+	Page page2 = new Page(currentPage);
+	List<Product> products = new ArrayList<Product>();
+	products = productManager.simpleSearch(products, page2, keyword);
 %>
 
 <%
@@ -39,7 +40,7 @@
 <head>
 <base href="<%=basePath%>">
 
-<title>My JSP 'productList.jsp' starting page</title>
+<title>My JSP 'simpleSearchResult.jsp' starting page</title>
 
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
@@ -67,12 +68,15 @@
 		</tr>
 		<%
 			/* 循环开始 */
-			int start = (page2.getCurrentPage() - 1) * page2.getPageSize();
-			for (int i = start; i < start + page2.getPageSize(); i++) {
+			//int start = (page2.getCurrentPage() - 1) * page2.getPageSize();
+			/* for (int i = 0; i < page2.getPageSize(); i++) {
 				//防止数组溢出错误
-				if (i >= page2.getTotalSize())
+				if (i >= page2.getTotalSize()){
+					System.out.println("totalsize=" +page2.getTotalSize());
 					break;
-				Product p = products.get(i);
+				} */
+				for(Iterator<Product> it = products.iterator(); it.hasNext();) {
+				Product p = it.next();
 		%>
 
 		<tr>
@@ -98,16 +102,14 @@
 			<td>
 				<%
 					if (page2.isHasFirst()) {
-				%> <a
-				href="admin/productList.jsp?currentPage=1">首页</a> <%
+				%> <a href="admin/simpleSearchResult.jsp?currentPage=1&keyword=<%=keyword%>">首页</a> <%
  	}
  %>
 			</td>
 			<td>
 				<%
 					if (page2.isHasPrevious()) {
-				%> <a
-				href="admin/productList.jsp?currentPage=<%=currentPage - 1%>">前一页</a>
+				%> <a href="admin/simpleSearchResult.jsp?currentPage=<%=currentPage - 1%>&keyword=<%=keyword%>">前一页</a>
 				<%
 					}
 				%>
@@ -115,8 +117,7 @@
 			<td>
 				<%
 					if (page2.isHasNext()) {
-				%> <a
-				href="admin/productList.jsp?currentPage=<%=currentPage + 1%>">后一页</a>
+				%> <a href="admin/simpleSearchResult.jsp?currentPage=<%=currentPage + 1%>&keyword=<%=keyword%>">后一页</a>
 				<%
 					}
 				%>
@@ -124,7 +125,8 @@
 			<td>
 				<%
 					if (page2.isHasLast()) {
-				%> <a href="admin/productList.jsp?currentPage=<%=page2.getTotalPages()%>">尾页</a>
+				%> <a
+				href="admin/simpleSearchResult.jsp?currentPage=<%=page2.getTotalPages()%>&keyword=<%=keyword%>">尾页</a>
 				<%
 					}
 				%>

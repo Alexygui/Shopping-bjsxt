@@ -13,6 +13,10 @@ public class Page {
 	
 	public Page() {}
 	
+	public Page(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	
 	// 通过currentPage和totalSize可以计算出其他的值，所以要用这两个参数构造这个类
 	public Page(int currentPage, int totalSize) {
 		this.currentPage = currentPage;
@@ -89,7 +93,7 @@ public class Page {
 	public void setHasLast(boolean hasLast) {
 		this.hasLast = hasLast;
 	}
-	public static int getPageSize() {
+	public int getPageSize() {
 		return PAGE_SIZE;
 	}
 	
